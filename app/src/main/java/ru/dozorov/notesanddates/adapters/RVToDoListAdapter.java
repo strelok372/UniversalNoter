@@ -25,7 +25,7 @@ public class RVToDoListAdapter extends RecyclerView.Adapter<RVToDoListAdapter.To
     @NonNull
     @Override
     public ToDoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = inflater.inflate(R.layout.to_do_item, parent);
+        View v = inflater.inflate(R.layout.to_do_item_tv, parent);
         return new ToDoViewHolder(v);
     }
 

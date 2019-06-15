@@ -15,13 +15,13 @@
         android:layout_weight="0"
         android:padding="5dp" />
 
-    <EditText
+    <TextView
         android:id="@+id/tv_to_do_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:hint="Введите текст..."
-        android:inputType="text"
+        android:singleLine="false"
+        android:text="Отвезти кошку к ветеринару"
         android:textColor="@color/design_default_color_on_secondary"
         android:textSize="25sp" />
 </LinearLayout>
