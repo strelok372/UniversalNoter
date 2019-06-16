@@ -33,15 +33,15 @@ public class NoteRepository { //можно сделать синглтоном |
     }
 
     public void insert(NoteEntity note){
-        new methodAsyncTask(dao, 1).execute();
+        new methodAsyncTask(dao, 1).execute(note);
     }
 
     public void delete(NoteEntity note){
-        new methodAsyncTask(dao, 3).execute();
+        new methodAsyncTask(dao, 3).execute(note);
     }
 
     public void update(NoteEntity note){
-        new methodAsyncTask(dao, 2).execute();
+        new methodAsyncTask(dao, 2).execute(note);
     }
 
     private static class methodAsyncTask extends AsyncTask<NoteEntity, Void, Void>{

@@ -5,16 +5,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import ru.dozorov.notesanddates.R;
 import ru.dozorov.notesanddates.adapters.RVSimpleNotesAdapter;
 import ru.dozorov.notesanddates.adapters.RVToDoListAdapter;
+import ru.dozorov.notesanddates.room.entities.DateNoteEntity;
+import ru.dozorov.notesanddates.room.entities.ToDoEntity;
+import ru.dozorov.notesanddates.viewmodel.NoteViewModel;
 
 public class ToDoListFragment extends Fragment {
+    private NoteViewModel model;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -25,6 +34,13 @@ public class ToDoListFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         final RVToDoListAdapter adapter = new RVToDoListAdapter(rootView.getContext());
         recyclerView.setAdapter(adapter);
+        model = ViewModelProviders.of(getActivity()).get(NoteViewModel.class);
+        model.getToDoNotes().observe(this, new Observer<List<ToDoEntity>>() {
+            @Override
+            public void onChanged(List<ToDoEntity> list) {
+                adapter.setNotes(list);
+            }
+        });
         return rootView;
     }
 }

@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentViewHolder;
 import androidx.viewpager2.widget.ViewPager2;
+import ru.dozorov.notesanddates.fragments.AddNoteFragment;
 import ru.dozorov.notesanddates.fragments.DateNotesFragment;
 import ru.dozorov.notesanddates.fragments.SimpleNotesFragment;
 import ru.dozorov.notesanddates.fragments.ToDoListFragment;

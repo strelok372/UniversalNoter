@@ -12,6 +12,7 @@ import org.threeten.bp.format.DateTimeFormatter;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 import ru.dozorov.notesanddates.R;
 import ru.dozorov.notesanddates.room.entities.DateNoteEntity;
@@ -22,12 +23,13 @@ public class RVDateNotesAdapter extends RecyclerView.Adapter<RVDateNotesAdapter.
 
     public RVDateNotesAdapter(Context context) {
         this.inflater = LayoutInflater.from(context);
+
     }
 
     @NonNull
     @Override
     public DateNoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = inflater.inflate(R.layout.date_note_item, parent);
+        View itemView = inflater.inflate(R.layout.date_note_item, parent, false);
         return new DateNoteViewHolder(itemView);
     }
 
@@ -53,6 +55,11 @@ public class RVDateNotesAdapter extends RecyclerView.Adapter<RVDateNotesAdapter.
             return 0;
     }
 
+    public void setNotes(List<DateNoteEntity> list){
+        entityList = list;
+        notifyDataSetChanged();
+    }
+
     class DateNoteViewHolder extends RecyclerView.ViewHolder{
         TextView text;
         TextView date;
@@ -67,6 +74,7 @@ public class RVDateNotesAdapter extends RecyclerView.Adapter<RVDateNotesAdapter.
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+//                    get
                     entityList.remove(getAdapterPosition());
                     //удаление из лайвдаты
                 }

@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/i_backup"
+        android:title="Backup"
+        android:icon="@drawable/ic_backup"
+        app:showAsAction="ifRoom"/>
+    <item android:icon="@drawable/ic_restore"
+        android:title="Restore"
+        android:id="@+id/i_restore"
+        app:showAsAction="ifRoom"/>
+    <item android:id="@+id/i_settings"
+        android:title="Settings"
+        android:icon="@drawable/ic_settings"
+        app:showAsAction="ifRoom"/>
 </menu>

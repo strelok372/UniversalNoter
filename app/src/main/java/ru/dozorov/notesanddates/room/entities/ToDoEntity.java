@@ -5,6 +5,7 @@ import androidx.room.PrimaryKey;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Getter
 @NoArgsConstructor
@@ -14,6 +15,12 @@ public class ToDoEntity implements NoteEntity{
     public int position;
     public String text;
     public int actual;
+
+    public ToDoEntity(String text, int actual) {
+        this.text = text;
+        this.actual = actual;
+    }
+
 
     @Override
     public String className() {

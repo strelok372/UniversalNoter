@@ -33,11 +33,15 @@ public class NoteTypeConverters {
 
     @TypeConverter
     public static LocalTime toLocalTime(String value){
-        return DateTimeFormatter.ISO_TIME.parse(value, LocalTime.FROM);
+        if (value != null)
+            return DateTimeFormatter.ISO_TIME.parse(value, LocalTime.FROM);
+        return null;
     }
 
     @TypeConverter
-    public static String fromLocalTime(LocalTime date){
-        return date.format(DateTimeFormatter.ISO_TIME);
+    public static String fromLocalTime(LocalTime time){
+        if (time != null)
+            return time.format(DateTimeFormatter.ISO_TIME);
+        return null;
     }
 }

@@ -8,12 +8,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import ru.dozorov.notesanddates.R;
 import ru.dozorov.notesanddates.adapters.RVDateNotesAdapter;
+import ru.dozorov.notesanddates.room.entities.DateNoteEntity;
+import ru.dozorov.notesanddates.room.entities.SimpleNoteEntity;
+import ru.dozorov.notesanddates.viewmodel.NoteViewModel;
 
 public class DateNotesFragment extends Fragment {
+    private NoteViewModel model;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -24,6 +33,17 @@ public class DateNotesFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         final RVDateNotesAdapter adapter = new RVDateNotesAdapter(rootView.getContext());
         recyclerView.setAdapter(adapter);
+        model = ViewModelProviders.of(getActivity()).get(NoteViewModel.class);
+        model.getDateNotes().observe(this, new Observer<List<DateNoteEntity>>() {
+            @Override
+            public void onChanged(List<DateNoteEntity> list) {
+                adapter.setNotes(list);
+            }
+        });
         return rootView;
+    }
+
+    protected void deleteNote(DateNoteEntity note){
+        model.delete(note);
     }
 }

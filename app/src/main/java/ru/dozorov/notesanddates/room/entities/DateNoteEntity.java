@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Getter
 @NoArgsConstructor
@@ -18,6 +19,13 @@ public class DateNoteEntity implements NoteEntity{
     public String description;
     public LocalTime time;
     public LocalDate date;
+
+    public DateNoteEntity(String description, LocalTime time, LocalDate date) {
+        this.description = description;
+        this.time = time;
+        this.date = date;
+    }
+
 
     @Override
     public String className() {

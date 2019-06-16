@@ -25,7 +25,7 @@ public class RVToDoListAdapter extends RecyclerView.Adapter<RVToDoListAdapter.To
     @NonNull
     @Override
     public ToDoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = inflater.inflate(R.layout.to_do_item_tv, parent);
+        View v = inflater.inflate(R.layout.to_do_item, parent, false);
         return new ToDoViewHolder(v);
     }
 
@@ -33,7 +33,11 @@ public class RVToDoListAdapter extends RecyclerView.Adapter<RVToDoListAdapter.To
     public void onBindViewHolder(@NonNull ToDoViewHolder holder, int position) {
         if (entityList != null)
             holder.text.setText(entityList.get(position).getText());
+    }
 
+    public void setNotes(List<ToDoEntity> list){
+        entityList = list;
+        notifyDataSetChanged();
     }
 
     @Override

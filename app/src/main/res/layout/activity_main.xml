@@ -15,35 +15,64 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary" />
+            android:background="@color/deepBlue"
+            app:titleTextColor="@color/white"/>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:tabMode="fixed"/>
+
+            app:tabBackground="@color/white"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@color/deepBlue" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!--<androidx.core.widget.NestedScrollView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
-
-        <androidx.viewpager.widget.ViewPager
+    <androidx.viewpager.widget.ViewPager
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-    <!--</androidx.core.widget.NestedScrollView>-->
+    <FrameLayout
+        android:id="@+id/fl_add_note"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="5dp"
+        android:layout_margin="15dp"
         android:onClick="onClick"
-        app:backgroundTint="@color/colorPrimary"
-        app:srcCompat="@drawable/ic_add_black_24dp" />
+        app:backgroundTint="@color/deepBlue"
+        app:srcCompat="@drawable/ic_add_black_24dp"
+        app:layout_dodgeInsetEdges="bottom"/>
 
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nsv_main_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_insetEdge="bottom"
+        app:layout_behavior="@string/bottom_sheet_behavior"
+        app:behavior_hideable="true">
+
+        <EditText
+            android:id="@+id/et_add_to_do_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_gravity="bottom"
+            android:layout_weight="0"
+            android:ems="10"
+            android:hint="Add note quick here..."
+            android:inputType="textMultiLine"
+            android:textSize="24sp"
+            android:textStyle="italic"
+            tools:ignore="Autofill"/>
+
+    </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

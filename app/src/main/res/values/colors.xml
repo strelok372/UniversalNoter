@@ -5,5 +5,7 @@
     <color name="colorAccent">#F01760</color>
     <color name="light_pink">#FBE9EF</color>
     <color name="light_pink2">#FAF1F4</color>
-    <color name="light_green">#E9FBF1</color>
+    <color name="white">#FFFFFF</color>
+    <color name="deepBlue">#2C1570</color>
+    <color name="light_green">#4D69FAC8</color>
 </resources>
