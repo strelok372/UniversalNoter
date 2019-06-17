@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginEnd="16dp"
+    android:orientation="vertical"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:id="@+id/ll_date_time_holder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="8dp"
+                android:layout_weight="0"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_time_dn_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:text="16:30"
+                    android:textAlignment="center"
+                    android:textColor="@color/deepBlue"
+                    android:textSize="18sp"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/tv_date_dn_item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:text="16.09.2019"
+                    android:textColor="@color/deepBlue"
+                    android:textSize="14sp"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/tv_text_dn_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Some event..."
+                android:inputType="textMultiLine"
+                android:textSize="24sp"
+                android:textStyle="italic" />
+
+            <ImageView
+                android:id="@+id/iv_date_note_expand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0"
+                app:srcCompat="@drawable/ic_arrow_up" />
+
+        </LinearLayout>
+
+        <include
+            android:id="@+id/i_date_note_item"
+            layout="@layout/date_note_item_details"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

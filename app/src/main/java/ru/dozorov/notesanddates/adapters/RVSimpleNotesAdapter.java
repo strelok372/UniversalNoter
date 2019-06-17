@@ -6,8 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import java.util.List;
+
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import ru.dozorov.notesanddates.R;
 import ru.dozorov.notesanddates.room.entities.SimpleNoteEntity;
@@ -15,9 +18,11 @@ import ru.dozorov.notesanddates.viewmodel.NoteViewModel;
 
 public class RVSimpleNotesAdapter extends RecyclerView.Adapter<RVSimpleNotesAdapter.SimpleNoteViewHolder> {
     List<SimpleNoteEntity> list;
+    OnSimpleItemClickListener listener;
     private final LayoutInflater inflater;
 
     public RVSimpleNotesAdapter(Context context) {
+        ((FragmentActivity) context).getSupportFragmentManager();
         this.inflater = LayoutInflater.from(context);
     }
 
@@ -28,14 +33,14 @@ public class RVSimpleNotesAdapter extends RecyclerView.Adapter<RVSimpleNotesAdap
         return new SimpleNoteViewHolder(v);
     }
 
-    public void setNotes(List<SimpleNoteEntity> list){
+    public void setNotes(List<SimpleNoteEntity> list) {
         this.list = list;
         notifyDataSetChanged();
     }
 
     @Override
     public void onBindViewHolder(@NonNull SimpleNoteViewHolder holder, int position) {
-        if (list != null){
+        if (list != null) {
             Log.i("DEBUG_LOG_MY: ", String.valueOf(list.size()));
             holder.title.setText(list.get(position).getTitle());
         }
@@ -49,7 +54,7 @@ public class RVSimpleNotesAdapter extends RecyclerView.Adapter<RVSimpleNotesAdap
             return 0;
     }
 
-    class SimpleNoteViewHolder extends RecyclerView.ViewHolder{
+    class SimpleNoteViewHolder extends RecyclerView.ViewHolder {
         TextView title;
 
         public SimpleNoteViewHolder(@NonNull View itemView) {
@@ -58,9 +63,19 @@ public class RVSimpleNotesAdapter extends RecyclerView.Adapter<RVSimpleNotesAdap
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //открыть окошко заметки
+                    if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION)
+                        listener.onItemClick(list.get(getAdapterPosition()));
                 }
             });
         }
     }
+
+    public interface OnSimpleItemClickListener {
+        void onItemClick(SimpleNoteEntity entity);
+    }
+
+    public void setOnItemClickListener(OnSimpleItemClickListener listener) {
+        this.listener = listener;
+    }
+
 }

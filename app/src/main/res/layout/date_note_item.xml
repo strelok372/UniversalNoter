@@ -15,14 +15,14 @@
         android:layout_height="wrap_content"
         android:padding="8dp">
 
-    <TextView
-        android:id="@+id/tv_text_dn_item"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:singleLine="true"
-        android:textAlignment="viewStart"
-        android:textSize="25sp"/>
+        <TextView
+            android:id="@+id/tv_text_dn_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:textAlignment="viewStart"
+            android:textSize="25sp" />
 
     <TextView
         android:id="@+id/tv_date_dn_item"

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,12 +22,12 @@ import ru.dozorov.notesanddates.viewmodel.NoteViewModel;
 
 public class SimpleNotesFragment extends Fragment {
     private NoteViewModel model;
+    FragmentManager fragmentManager;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(R.layout.simple_notes, container, false);
         RecyclerView recyclerView = rootView.findViewById(R.id.rv_simple_notes);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -40,6 +41,17 @@ public class SimpleNotesFragment extends Fragment {
             @Override
             public void onChanged(List<SimpleNoteEntity> list) {
                 adapter.setNotes(list);
+            }
+        });
+
+        adapter.setOnItemClickListener(new RVSimpleNotesAdapter.OnSimpleItemClickListener() {
+            @Override
+            public void onItemClick(SimpleNoteEntity entity) {
+                getChildFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.ll_simple_notes, new AddNoteFragment().setEditMode(entity))
+                        .addToBackStack(null)
+                        .commit();
             }
         });
 
