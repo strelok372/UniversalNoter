@@ -1,30 +1,13 @@
-package ru.dozorov.notesanddates;
+package ru.dozorov.ultinotes;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.widget.NestedScrollView;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-import ru.dozorov.notesanddates.adapters.ViewPageAdapter;
-import ru.dozorov.notesanddates.fragments.AddDateNoteFragment;
-import ru.dozorov.notesanddates.fragments.AddNoteFragment;
-import ru.dozorov.notesanddates.fragments.DateNotesFragment;
-import ru.dozorov.notesanddates.fragments.ToDoListFragment;
-import ru.dozorov.notesanddates.room.entities.ToDoEntity;
-import ru.dozorov.notesanddates.viewmodel.NoteViewModel;
-
+import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -34,7 +17,23 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+import ru.dozorov.ultinotes.adapters.RVSimpleNotesAdapter;
+import ru.dozorov.ultinotes.adapters.ViewPageAdapter;
+import ru.dozorov.ultinotes.fragments.AddDateNoteFragment;
+import ru.dozorov.ultinotes.fragments.AddNoteFragment;
+import ru.dozorov.ultinotes.room.entities.SimpleNoteEntity;
+import ru.dozorov.ultinotes.room.entities.ToDoEntity;
+import ru.dozorov.ultinotes.viewmodel.NoteViewModel;
+
+public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdapter.OnSimpleItemClickListener {
     private ViewPager vPager;
     private TabLayout tabLayout;
     private AppBarLayout barLayout;
@@ -110,12 +109,12 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void onClick(View view){
+    public void onClick(View view) {
 //        Toast.makeText(this, String.valueOf(vPager.getCurrentItem()), Toast.LENGTH_SHORT).show();
 //        getSupportFragmentManager().findFragmentById(R.layout.note_add_layout);
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.fab_main:
-                switch (vPager.getCurrentItem()){
+                switch (vPager.getCurrentItem()) {
                     case 0:
                         addNoteFragment(new AddDateNoteFragment());
                         break;
@@ -123,9 +122,10 @@ public class MainActivity extends AppCompatActivity {
                         addNoteFragment(new AddNoteFragment());
                         break;
                     case 2:
-                        if (!addToDo.getText().toString().isEmpty()){
+                        if (!addToDo.getText().toString().isEmpty()) {
                             noteViewModel.insert(new ToDoEntity(addToDo.getText().toString(), 1));
                             addToDo.getText().clear();
+                            hideKeyboard(this);
                         }
                         break;
                 }
@@ -140,20 +140,46 @@ public class MainActivity extends AppCompatActivity {
             fab.setVisibility(View.VISIBLE);
     }
 
-    public void addNoteFragment(Fragment fragment){
+    public void addNoteFragment(Fragment fragment) {
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             fab.setVisibility(View.INVISIBLE);
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.add(R.id.fl_add_note, fragment, "addNewNote");
+//            fragmentTransaction.replace(R.id.fl_add_note, fragment);
             fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             fragmentTransaction.commit();
         }
     }
-    public void closeNoteAddFragment(){
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0){
+
+    public void closeNoteAddFragment() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             onBackPressed();
-            if (fab.isOrWillBeHidden())
-                fab.setVisibility(View.VISIBLE);
-        };
+        }
+        ;
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    @Override
+    public void onItemClick(SimpleNoteEntity entity) {
+
+        AddNoteFragment addNoteFragment = new AddNoteFragment().setEditMode(entity);
+        addNoteFragment(addNoteFragment);
+//                getSupportFragmentManager()
+//                        .beginTransaction()
+//                        .replace(R.id.ll_simple_notes, addNoteFragment)
+//                        .addToBackStack(null)
+//                        .commit();
+
     }
 }

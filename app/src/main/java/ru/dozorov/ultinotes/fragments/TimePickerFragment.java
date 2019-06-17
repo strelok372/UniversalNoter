@@ -1,4 +1,4 @@
-package ru.dozorov.notesanddates.fragments;
+package ru.dozorov.ultinotes.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -8,24 +8,21 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.widget.DatePicker;
 import android.widget.TimePicker;
-
-import java.util.ArrayList;
-import java.util.Date;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import ru.dozorov.notesanddates.R;
+import ru.dozorov.ultinotes.R;
 
-public class DatePickerFragment extends DialogFragment {
-    private DatePicker datePicker;
+public class TimePickerFragment extends DialogFragment {
+    TimePicker timePicker;
 
     @Override
     public void onStart() {
         super.onStart();
-        datePicker = getDialog().findViewById(R.id.dp_picker);
+        timePicker = getDialog().findViewById(R.id.tp_dialog);
+        timePicker.setIs24HourView(true);
     }
 
     @NonNull
@@ -33,20 +30,26 @@ public class DatePickerFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()); //???
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        builder.setView(inflater.inflate(R.layout.date_picker_dialog, null))
+        builder.setView(inflater.inflate(R.layout.time_picker_dialog, null))
                 .setPositiveButton("ADD", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent();
-                        int[] s = new int[] {datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth()};
-                        intent.putExtra("date", s);
+                        int[] s;
+                        if (Build.VERSION.SDK_INT >= 23 ) {
+                            s = new int[]{timePicker.getHour(), timePicker.getMinute()};
+                        }
+                        else {
+                            s = new int[]{timePicker.getCurrentHour(), timePicker.getCurrentMinute()};
+                        }
+                        intent.putExtra("time", s);
                         getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        DatePickerFragment.this.getDialog().cancel();
+                        TimePickerFragment.this.getDialog().cancel();
                     }
                 });
         return builder.create();

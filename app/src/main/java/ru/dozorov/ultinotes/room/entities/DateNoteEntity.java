@@ -1,14 +1,12 @@
-package ru.dozorov.notesanddates.room.entities;
+package ru.dozorov.ultinotes.room.entities;
 
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalTime;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 @NoArgsConstructor

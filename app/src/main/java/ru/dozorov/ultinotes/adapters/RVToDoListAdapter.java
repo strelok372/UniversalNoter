@@ -1,4 +1,4 @@
-package ru.dozorov.notesanddates.adapters;
+package ru.dozorov.ultinotes.adapters;
 
 import android.content.Context;
 import android.os.Handler;
@@ -16,9 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
-import ru.dozorov.notesanddates.R;
-import ru.dozorov.notesanddates.room.entities.ToDoEntity;
-import ru.dozorov.notesanddates.viewmodel.NoteViewModel;
+import ru.dozorov.ultinotes.R;
+import ru.dozorov.ultinotes.room.entities.ToDoEntity;
+import ru.dozorov.ultinotes.viewmodel.NoteViewModel;
 
 public class RVToDoListAdapter extends RecyclerView.Adapter<RVToDoListAdapter.ToDoViewHolder> {
     private final LayoutInflater inflater;

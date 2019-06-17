@@ -54,13 +54,12 @@
             </LinearLayout>
 
             <EditText
-                android:id="@+id/tv_text_dn_item"
+                android:id="@+id/et_text_dn_item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:ems="10"
                 android:hint="Some event..."
-                android:inputType="textMultiLine"
+                android:inputType="textCapSentences"
                 android:textSize="24sp"
                 android:textStyle="italic" />
 

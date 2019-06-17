@@ -1,4 +1,4 @@
-package ru.dozorov.notesanddates.adapters;
+package ru.dozorov.ultinotes.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -16,9 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
-import ru.dozorov.notesanddates.R;
-import ru.dozorov.notesanddates.room.entities.DateNoteEntity;
-import ru.dozorov.notesanddates.viewmodel.NoteViewModel;
+import ru.dozorov.ultinotes.R;
+import ru.dozorov.ultinotes.room.entities.DateNoteEntity;
+import ru.dozorov.ultinotes.viewmodel.NoteViewModel;
 
 public class RVDateNotesAdapter extends RecyclerView.Adapter<RVDateNotesAdapter.DateNoteViewHolder> {
     private final LayoutInflater inflater;
@@ -62,10 +62,12 @@ public class RVDateNotesAdapter extends RecyclerView.Adapter<RVDateNotesAdapter.
             final boolean isExpanded = position == mExpandedPosition;
 
             if (isExpanded) {
-                holder.expandButton.setImageResource(R.drawable.ic_arrow_down);
+                holder.text.setSingleLine(false);
+                holder.expandButton.setImageResource(R.drawable.ic_arrow_up);
                 holder.dtHolder.setVisibility(View.GONE);
             } else {
-                holder.expandButton.setImageResource(R.drawable.ic_arrow_up);
+                holder.text.setSingleLine();
+                holder.expandButton.setImageResource(R.drawable.ic_arrow_down);
                 holder.dtHolder.setVisibility(View.VISIBLE);
             }
 
@@ -117,7 +119,7 @@ public class RVDateNotesAdapter extends RecyclerView.Adapter<RVDateNotesAdapter.
 
             super(itemView);
             date = itemView.findViewById(R.id.tv_date_dn_item);
-            text = itemView.findViewById(R.id.tv_text_dn_item);
+            text = itemView.findViewById(R.id.et_text_dn_item);
             deleteButton = itemView.findViewById(R.id.iv_delete_button);
             details = itemView.findViewById(R.id.i_date_note_item);
             expandButton = itemView.findViewById(R.id.iv_date_note_expand);

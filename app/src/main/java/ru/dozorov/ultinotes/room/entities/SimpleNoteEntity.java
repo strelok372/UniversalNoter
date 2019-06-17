@@ -1,4 +1,4 @@
-package ru.dozorov.notesanddates.room.entities;
+package ru.dozorov.ultinotes.room.entities;
 
 import org.threeten.bp.OffsetDateTime;
 
@@ -6,7 +6,6 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter

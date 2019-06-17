@@ -1,6 +1,4 @@
-package ru.dozorov.notesanddates.adapters;
-
-import android.view.ViewGroup;
+package ru.dozorov.ultinotes.adapters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,18 +8,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.adapter.FragmentViewHolder;
-import androidx.viewpager2.widget.ViewPager2;
-import ru.dozorov.notesanddates.fragments.AddNoteFragment;
-import ru.dozorov.notesanddates.fragments.DateNotesFragment;
-import ru.dozorov.notesanddates.fragments.SimpleNotesFragment;
-import ru.dozorov.notesanddates.fragments.ToDoListFragment;
+import ru.dozorov.ultinotes.fragments.DateNotesFragment;
+import ru.dozorov.ultinotes.fragments.SimpleNotesFragment;
+import ru.dozorov.ultinotes.fragments.ToDoListFragment;
 
 public class ViewPageAdapter extends FragmentPagerAdapter {
     private List<Fragment> fragments = new ArrayList<>();
     private List<String> titles = new ArrayList<String>();
-        //    Fragment[] fragments = {new DateNotesFragment(), new SimpleNotesFragment(), new ToDoListFragment()};
+    //    Fragment[] fragments = {new DateNotesFragment(), new SimpleNotesFragment(), new ToDoListFragment()};
 
     public ViewPageAdapter(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);

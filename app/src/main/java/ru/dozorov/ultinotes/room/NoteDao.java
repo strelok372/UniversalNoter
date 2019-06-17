@@ -1,7 +1,6 @@
-package ru.dozorov.notesanddates.room;
+package ru.dozorov.ultinotes.room;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -10,10 +9,10 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
-import ru.dozorov.notesanddates.room.entities.DateNoteEntity;
-import ru.dozorov.notesanddates.room.entities.NoteEntity;
-import ru.dozorov.notesanddates.room.entities.ToDoEntity;
-import ru.dozorov.notesanddates.room.entities.SimpleNoteEntity;
+import ru.dozorov.ultinotes.room.entities.DateNoteEntity;
+import ru.dozorov.ultinotes.room.entities.NoteEntity;
+import ru.dozorov.ultinotes.room.entities.ToDoEntity;
+import ru.dozorov.ultinotes.room.entities.SimpleNoteEntity;
 
 @Dao
 public abstract class NoteDao {

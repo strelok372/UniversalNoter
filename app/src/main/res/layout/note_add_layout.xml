@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Title..."
-        android:inputType="textPersonName"
+        android:inputType="textCapSentences"
         android:singleLine="true"
         android:textSize="24sp"
         android:textStyle="italic" />
@@ -26,7 +26,7 @@
         android:ems="10"
         android:gravity="start"
         android:hint="Input text here..."
-        android:inputType="textMultiLine"
+        android:inputType="textCapSentences"
         android:textSize="24sp"
         android:textStyle="italic" />
 

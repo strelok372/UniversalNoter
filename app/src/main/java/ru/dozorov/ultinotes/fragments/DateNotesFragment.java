@@ -1,4 +1,4 @@
-package ru.dozorov.notesanddates.fragments;
+package ru.dozorov.ultinotes.fragments;
 
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -14,11 +14,10 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import ru.dozorov.notesanddates.R;
-import ru.dozorov.notesanddates.adapters.RVDateNotesAdapter;
-import ru.dozorov.notesanddates.room.entities.DateNoteEntity;
-import ru.dozorov.notesanddates.room.entities.SimpleNoteEntity;
-import ru.dozorov.notesanddates.viewmodel.NoteViewModel;
+import ru.dozorov.ultinotes.R;
+import ru.dozorov.ultinotes.adapters.RVDateNotesAdapter;
+import ru.dozorov.ultinotes.room.entities.DateNoteEntity;
+import ru.dozorov.ultinotes.viewmodel.NoteViewModel;
 
 public class DateNotesFragment extends Fragment {
     private NoteViewModel model;

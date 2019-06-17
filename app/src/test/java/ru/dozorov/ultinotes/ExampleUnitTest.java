@@ -1,4 +1,4 @@
-package ru.dozorov.notesanddates;
+package ru.dozorov.ultinotes;
 
 import org.junit.Test;
 

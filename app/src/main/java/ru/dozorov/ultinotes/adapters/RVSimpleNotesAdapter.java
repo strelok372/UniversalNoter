@@ -1,4 +1,4 @@
-package ru.dozorov.notesanddates.adapters;
+package ru.dozorov.ultinotes.adapters;
 
 import android.content.Context;
 import android.util.Log;
@@ -12,9 +12,8 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
-import ru.dozorov.notesanddates.R;
-import ru.dozorov.notesanddates.room.entities.SimpleNoteEntity;
-import ru.dozorov.notesanddates.viewmodel.NoteViewModel;
+import ru.dozorov.ultinotes.R;
+import ru.dozorov.ultinotes.room.entities.SimpleNoteEntity;
 
 public class RVSimpleNotesAdapter extends RecyclerView.Adapter<RVSimpleNotesAdapter.SimpleNoteViewHolder> {
     List<SimpleNoteEntity> list;
@@ -60,7 +59,7 @@ public class RVSimpleNotesAdapter extends RecyclerView.Adapter<RVSimpleNotesAdap
         public SimpleNoteViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.tv_simple_note_title);
-            itemView.setOnClickListener(new View.OnClickListener() {
+            title.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION)

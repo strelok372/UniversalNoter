@@ -1,4 +1,4 @@
-package ru.dozorov.notesanddates.room;
+package ru.dozorov.ultinotes.room;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalTime;
 import org.threeten.bp.OffsetDateTime;

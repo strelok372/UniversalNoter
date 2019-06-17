@@ -1,4 +1,4 @@
-package ru.dozorov.notesanddates.viewmodel;
+package ru.dozorov.ultinotes.viewmodel;
 
 import android.app.Application;
 
@@ -8,11 +8,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import lombok.Getter;
-import ru.dozorov.notesanddates.repository.NoteRepository;
-import ru.dozorov.notesanddates.room.entities.DateNoteEntity;
-import ru.dozorov.notesanddates.room.entities.NoteEntity;
-import ru.dozorov.notesanddates.room.entities.ToDoEntity;
-import ru.dozorov.notesanddates.room.entities.SimpleNoteEntity;
+import ru.dozorov.ultinotes.repository.NoteRepository;
+import ru.dozorov.ultinotes.room.entities.DateNoteEntity;
+import ru.dozorov.ultinotes.room.entities.NoteEntity;
+import ru.dozorov.ultinotes.room.entities.ToDoEntity;
+import ru.dozorov.ultinotes.room.entities.SimpleNoteEntity;
 
 public class NoteViewModel extends AndroidViewModel {
     private NoteRepository repo;

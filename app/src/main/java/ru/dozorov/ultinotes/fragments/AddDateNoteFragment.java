@@ -1,18 +1,16 @@
-package ru.dozorov.notesanddates.fragments;
+package ru.dozorov.ultinotes.fragments;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalTime;
@@ -23,9 +21,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
-import ru.dozorov.notesanddates.R;
-import ru.dozorov.notesanddates.room.entities.DateNoteEntity;
-import ru.dozorov.notesanddates.viewmodel.NoteViewModel;
+import ru.dozorov.ultinotes.R;
+import ru.dozorov.ultinotes.room.entities.DateNoteEntity;
+import ru.dozorov.ultinotes.viewmodel.NoteViewModel;
 
 public class AddDateNoteFragment extends Fragment implements View.OnClickListener {
     private static final int REQUEST_TIME = 1;
@@ -67,6 +65,13 @@ public class AddDateNoteFragment extends Fragment implements View.OnClickListene
         fragment.show(getFragmentManager(), fragment.getClass().getName());
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+    }
+
     public void openDatePicker() {
         DialogFragment fragment = new DatePickerFragment();
         fragment.setTargetFragment(this, REQUEST_DATE);
@@ -74,7 +79,7 @@ public class AddDateNoteFragment extends Fragment implements View.OnClickListene
     }
 
     public void addNote() {
-        model.insert(new DateNoteEntity(description.toString(), localTime, localDate));
+        model.insert(new DateNoteEntity(description.getText().toString(), localTime, localDate));
     }
 
     @Override
@@ -94,6 +99,10 @@ public class AddDateNoteFragment extends Fragment implements View.OnClickListene
                 getActivity().onBackPressed();
                 break;
         }
+    }
+
+    public interface keyboardHider{
+        public void needToClose();
     }
 
     @Override

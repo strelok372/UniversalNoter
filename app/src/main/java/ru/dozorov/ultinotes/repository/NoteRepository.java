@@ -1,4 +1,4 @@
-package ru.dozorov.notesanddates.repository;
+package ru.dozorov.ultinotes.repository;
 
 import android.app.Application;
 import android.os.AsyncTask;
@@ -7,12 +7,12 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 import lombok.Getter;
-import ru.dozorov.notesanddates.room.NoteDao;
-import ru.dozorov.notesanddates.room.NoteDatabase;
-import ru.dozorov.notesanddates.room.entities.DateNoteEntity;
-import ru.dozorov.notesanddates.room.entities.NoteEntity;
-import ru.dozorov.notesanddates.room.entities.ToDoEntity;
-import ru.dozorov.notesanddates.room.entities.SimpleNoteEntity;
+import ru.dozorov.ultinotes.room.NoteDao;
+import ru.dozorov.ultinotes.room.NoteDatabase;
+import ru.dozorov.ultinotes.room.entities.DateNoteEntity;
+import ru.dozorov.ultinotes.room.entities.NoteEntity;
+import ru.dozorov.ultinotes.room.entities.ToDoEntity;
+import ru.dozorov.ultinotes.room.entities.SimpleNoteEntity;
 
 public class NoteRepository { //можно сделать синглтоном || методы через asynctask || что будут возвращать не гет-методы?
     NoteDao dao;

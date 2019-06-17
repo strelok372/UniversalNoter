@@ -1,4 +1,4 @@
-package ru.dozorov.notesanddates;
+package ru.dozorov.ultinotes;
 
 import android.content.Context;
 import androidx.test.InstrumentationRegistry;
