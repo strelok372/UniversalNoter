@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdap
     String lastBackuped;
     GoogleSignInAccount account;
     NoteDao noteDao;
+    MenuItem backupButton;
 
     @Override
     protected void onDestroy() {
@@ -123,7 +124,8 @@ public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdap
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_resource, menu);
-        if (account != null) menu.findItem(R.id.i_backup).setIcon(R.drawable.ic_cloud);
+        backupButton = menu.findItem(R.id.i_backup);
+        if (account != null) backupButton.setIcon(R.drawable.ic_cloud);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -236,6 +238,8 @@ public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdap
 
     @Override
     public void doBackupNow() {
+        if (account == null) Log.i("SDFSLKDFLKSD", "Account is null");
         backUp();
+        backupButton.setIcon(R.drawable.ic_cloud);
     }
 }

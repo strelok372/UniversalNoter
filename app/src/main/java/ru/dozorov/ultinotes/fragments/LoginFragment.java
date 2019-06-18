@@ -143,6 +143,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             account = completedTask.getResult(ApiException.class);
+            listener.getLoginInfo(account);
             updateUi();
 //            Toast.makeText(getContext(),"Auth success for " + account.getEmail(), Toast.LENGTH_SHORT).show();
         } catch (ApiException e) {

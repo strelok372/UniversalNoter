@@ -15,7 +15,7 @@ import java.io.IOException;
 public class UltiNoteBackupAgent extends BackupAgentHelper {
     static final String PREFS = "user_preferences";
     static final String PREFS_KEY = "prefs";
-        static final String DB = "databases/note_database";
+    static final String DB = "databases/note_database";
     static final String DB_KEY = "database";
     final Object syncObj = new Object();
 
