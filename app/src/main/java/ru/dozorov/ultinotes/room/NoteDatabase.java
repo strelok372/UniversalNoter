@@ -25,4 +25,11 @@ public abstract class NoteDatabase extends RoomDatabase {
         }
             return database;
     }
+
+    public static synchronized void destroyInstance(){
+        if (database != null){
+            database.close();
+        }
+        database = null;
+    }
 }

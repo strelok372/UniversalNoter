@@ -39,8 +39,10 @@ public class RVToDoListAdapter extends RecyclerView.Adapter<RVToDoListAdapter.To
 
     @Override
     public void onBindViewHolder(@NonNull ToDoViewHolder holder, int position) {
-        if (entityList != null)
+        if (entityList != null){
             holder.text.setText(entityList.get(position).getText());
+            holder.checkBox.setActivated(false);
+        }
     }
 
     public void setNotes(List<ToDoEntity> list){

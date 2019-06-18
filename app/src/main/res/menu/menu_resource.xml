@@ -4,11 +4,7 @@
     <item
         android:id="@+id/i_backup"
         android:title="Backup"
-        android:icon="@drawable/ic_backup"
-        app:showAsAction="ifRoom"/>
-    <item android:icon="@drawable/ic_restore"
-        android:title="Restore"
-        android:id="@+id/i_restore"
+        android:icon="@drawable/ic_cloud_white"
         app:showAsAction="ifRoom"/>
     <item android:id="@+id/i_settings"
         android:title="Settings"
