@@ -23,6 +23,7 @@ public class NoteViewModel extends AndroidViewModel {
     @Getter
     private LiveData<List<ToDoEntity>> toDoNotes;
 
+
     public NoteViewModel(@NonNull Application application) {
         super(application);
         repo = new NoteRepository(application); //или гетконтекст

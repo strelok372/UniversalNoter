@@ -41,7 +41,6 @@ public class RVToDoListAdapter extends RecyclerView.Adapter<RVToDoListAdapter.To
     public void onBindViewHolder(@NonNull ToDoViewHolder holder, int position) {
         if (entityList != null){
             holder.text.setText(entityList.get(position).getText());
-            holder.checkBox.setActivated(false);
         }
     }
 
@@ -68,12 +67,13 @@ public class RVToDoListAdapter extends RecyclerView.Adapter<RVToDoListAdapter.To
                 @Override
                 public void onClick(View v) {
                     Animation anim = AnimationUtils.loadAnimation(inflater.getContext(), R.anim.item_animation_swap_right);
-                    anim.setDuration(300);
+                    anim.setDuration(400);
                     itemView.startAnimation(anim);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             viewModel.delete(entityList.get(getAdapterPosition()));
+                            checkBox.setActivated(false);
                         }
                     }, 300);
                 }

@@ -7,7 +7,9 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Setter
 @Getter
 @NoArgsConstructor
 @Entity(tableName = "date_notes")

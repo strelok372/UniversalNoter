@@ -55,7 +55,14 @@ public class AddDateNoteFragment extends Fragment implements View.OnClickListene
         cancelButton.setOnClickListener(this);
         pickedDate = rootView.findViewById(R.id.tv_picked_date);
         pickedTime = rootView.findViewById(R.id.tv_picked_time);
+
         model = ViewModelProviders.of(getActivity()).get(NoteViewModel.class);
+
+        localTime = LocalTime.now();
+        pickedTime.setText(localTime.format(DateTimeFormatter.ofPattern("HH:mm")));
+        localDate = LocalDate.now();
+        pickedDate.setText(localDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+
         return rootView;
     }
 
@@ -92,8 +99,10 @@ public class AddDateNoteFragment extends Fragment implements View.OnClickListene
                 openDatePicker();
                 break;
             case R.id.b_add_date_note:
-                addNote();
-                getActivity().onBackPressed();
+                if (!description.getText().toString().isEmpty()){
+                    addNote();
+                    getActivity().onBackPressed();
+                }
                 break;
             case R.id.b_cancel_date_note:
                 getActivity().onBackPressed();
@@ -113,12 +122,12 @@ public class AddDateNoteFragment extends Fragment implements View.OnClickListene
                 case REQUEST_TIME:
                     int[] weight = data.getIntArrayExtra("time");
                     localTime = LocalTime.of(weight[0], weight[1]);
-                    pickedTime.setText(localTime.format(DateTimeFormatter.ISO_LOCAL_TIME));
+                    pickedTime.setText(localTime.format(DateTimeFormatter.ofPattern("HH:mm")));
                     break;
                 case REQUEST_DATE:
                     int[] date = data.getIntArrayExtra("date");
                     localDate = LocalDate.of(date[0], date[1], date[2]);
-                    pickedDate.setText(localDate.format(DateTimeFormatter.ISO_LOCAL_DATE));
+                    pickedDate.setText(localDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
                     break;
             }
         }

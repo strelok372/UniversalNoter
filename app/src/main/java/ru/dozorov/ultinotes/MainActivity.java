@@ -1,9 +1,6 @@
 package ru.dozorov.ultinotes;
 
 import android.app.Activity;
-import android.app.backup.BackupManager;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -12,21 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Toast;
-
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -38,8 +20,18 @@ import androidx.sqlite.db.SimpleSQLiteQuery;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
+
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import ru.dozorov.ultinotes.adapters.RVSimpleNotesAdapter;
 import ru.dozorov.ultinotes.adapters.ViewPageAdapter;
@@ -53,7 +45,7 @@ import ru.dozorov.ultinotes.room.entities.SimpleNoteEntity;
 import ru.dozorov.ultinotes.room.entities.ToDoEntity;
 import ru.dozorov.ultinotes.viewmodel.NoteViewModel;
 
-public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdapter.OnSimpleItemClickListener {
+public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdapter.OnSimpleItemClickListener, LoginFragment.OnLoginFragmentListener {
     private ViewPager vPager;
     private TabLayout tabLayout;
     private AppBarLayout barLayout;
@@ -138,7 +130,13 @@ public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdap
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.i_backup: //ЗДЕСЯ ФРАГМЕНТ!!!!
+            case R.id.i_backup:
+//                fab.setVisibility(View.INVISIBLE);
+//                getSupportFragmentManager().beginTransaction()
+//                        .add(R.id.coord_layout, new LoginFragment(lastBackuped), "addNewNote")
+//                        .addToBackStack(null)
+//                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+//                        .commit();
                 addNoteFragment(new LoginFragment(lastBackuped));
                 break;
             case R.id.i_settings:
@@ -147,7 +145,6 @@ public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdap
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 
     public void onClick(View view) {
@@ -199,16 +196,18 @@ public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdap
         }
     }
 
-    public void backUp(){
-        new Runnable() {
-            @Override
-            public void run() {
-                noteDao.checkpoint(new SimpleSQLiteQuery("pragma wal_checkpoint(full)"));
-            }
-        };
-        Log.i("MYLOGGGGGGGGGGG: ", "Query is completed?");
-        UltiNoteBackupAgent.requestBackup(this);
-        lastBackuped = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+    public void backUp() {
+        if (account != null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    noteDao.checkpoint(new SimpleSQLiteQuery("pragma wal_checkpoint(full)"));
+                }
+            }).start();
+            Log.i("MYLOGGGGGGGGGGG: ", "Query is completed?");
+            UltiNoteBackupAgent.requestBackup(this);
+            lastBackuped = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+        }
     }
 
     public static void hideKeyboard(Activity activity) {
@@ -224,10 +223,19 @@ public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdap
 
     @Override
     public void onItemClick(SimpleNoteEntity entity) {
-
         AddNoteFragment addNoteFragment = new AddNoteFragment().setEditMode(entity);
         addNoteFragment(addNoteFragment);
     }
 
 
+    @Override
+    public void getLoginInfo(GoogleSignInAccount account) {
+        this.account = account;
+        if (account == null) lastBackuped = null;
+    }
+
+    @Override
+    public void doBackupNow() {
+        backUp();
+    }
 }

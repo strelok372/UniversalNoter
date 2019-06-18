@@ -85,6 +85,7 @@ public abstract class NoteDao {
         }
     }
 
+
     @Query("SELECT * FROM date_notes ORDER BY date, time DESC")
     public abstract LiveData<List<DateNoteEntity>> getDateNotes();
 
