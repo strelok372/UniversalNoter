@@ -177,6 +177,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             case R.id.b_backup_now:
                 lastBU = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
                 lastSaved.setText("Last backup: " + lastBU);
+                listener.doBackupNow();
                 break;
 
             case R.id.b_close_login:
