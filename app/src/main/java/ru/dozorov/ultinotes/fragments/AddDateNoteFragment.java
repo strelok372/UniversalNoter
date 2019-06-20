@@ -38,6 +38,7 @@ public class AddDateNoteFragment extends Fragment implements View.OnClickListene
     private TextView pickedTime;
     private TextView pickedDate;
     private NoteViewModel model;
+//    DateNotesFragment.DateTimePickerDialogCall dtp;
 
 
     @Nullable
@@ -78,6 +79,10 @@ public class AddDateNoteFragment extends Fragment implements View.OnClickListene
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
     }
+
+//    public void setDateTimePicker(DateNotesFragment.DateTimePickerDialogCall dtp){
+//        this.dtp = dtp;
+//    }
 
     public void openDatePicker() {
         DialogFragment fragment = new DatePickerFragment();

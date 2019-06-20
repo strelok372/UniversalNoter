@@ -2,6 +2,7 @@ package ru.dozorov.ultinotes;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +28,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
+import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
@@ -36,16 +38,16 @@ import java.util.List;
 import ru.dozorov.ultinotes.adapters.RVSimpleNotesAdapter;
 import ru.dozorov.ultinotes.adapters.ViewPageAdapter;
 import ru.dozorov.ultinotes.backup.UltiNoteBackupAgent;
-import ru.dozorov.ultinotes.fragments.AddDateNoteFragment;
 import ru.dozorov.ultinotes.fragments.AddNoteFragment;
 import ru.dozorov.ultinotes.fragments.LoginFragment;
 import ru.dozorov.ultinotes.room.NoteDao;
 import ru.dozorov.ultinotes.room.NoteDatabase;
+import ru.dozorov.ultinotes.room.entities.DateNoteEntity;
 import ru.dozorov.ultinotes.room.entities.SimpleNoteEntity;
 import ru.dozorov.ultinotes.room.entities.ToDoEntity;
 import ru.dozorov.ultinotes.viewmodel.NoteViewModel;
 
-public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdapter.OnSimpleItemClickListener, LoginFragment.OnLoginFragmentListener {
+public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdapter.OnSimpleItemClickListener, LoginFragment.OnLoginFragmentListener, KeyboardInterface {
     private ViewPager vPager;
     private TabLayout tabLayout;
     private AppBarLayout barLayout;
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdap
     GoogleSignInAccount account;
     NoteDao noteDao;
     MenuItem backupButton;
+    InputMethodManager imm;
 
     @Override
     protected void onDestroy() {
@@ -104,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdap
 
             @Override
             public void onPageSelected(int position) {
-
+                hideK();
             }
 
             @Override
@@ -117,6 +120,8 @@ public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdap
         account = GoogleSignIn.getLastSignedInAccount(this);
 
         noteDao = NoteDatabase.getInstance(this).noteDao();
+
+        imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
 
     }
 
@@ -148,6 +153,18 @@ public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdap
         return super.onOptionsItemSelected(item);
     }
 
+    private void hideK() {
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = this.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(this);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
 
     public void onClick(View view) {
 //        Toast.makeText(this, String.valueOf(vPager.getCurrentItem()), Toast.LENGTH_SHORT).show();
@@ -156,7 +173,8 @@ public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdap
             case R.id.fab_main:
                 switch (vPager.getCurrentItem()) {
                     case 0:
-                        addNoteFragment(new AddDateNoteFragment());
+                        noteViewModel.insert(new DateNoteEntity("", null, LocalDate.now()));
+//                        addNoteFragment(new AddDateNoteFragment());
                         break;
                     case 1:
                         addNoteFragment(new AddNoteFragment());
@@ -165,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdap
                         if (!addToDo.getText().toString().isEmpty()) {
                             noteViewModel.insert(new ToDoEntity(addToDo.getText().toString(), 1));
                             addToDo.getText().clear();
-                            hideKeyboard(this);
+                            hideKeyboard();
                         }
                         break;
                 }
@@ -214,6 +232,7 @@ public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdap
 
     public static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+
         //Find the currently focused view, so we can grab the correct window token from it.
         View view = activity.getCurrentFocus();
         //If no view currently has focus, create a new one, just so we can grab a window token from it
@@ -241,5 +260,30 @@ public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdap
         if (account == null) Log.i("SDFSLKDFLKSD", "Account is null");
         backUp();
         backupButton.setIcon(R.drawable.ic_cloud);
+    }
+
+    @Override
+    public void hideKeyboard() {
+        View view = getCurrentFocus();
+        if (view == null) {
+            view = new View(this);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    @Override
+    public void showKeyboard(final View view) {
+        if (view == null) {
+            View mv = getCurrentFocus();
+            imm.showSoftInput(mv, InputMethodManager.SHOW_IMPLICIT);
+        } else {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (view.requestFocus())
+                        imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+                }
+            }, 100);
+        }
     }
 }

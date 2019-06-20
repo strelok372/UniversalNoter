@@ -17,6 +17,7 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/ll_date_note_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -63,6 +64,7 @@
                 android:inputType="textCapSentences"
                 android:textColor="@color/veryDeepBlue"
                 android:textSize="24sp"
+                android:imeOptions="actionDone"
                 android:textStyle="italic" />
 
             <ImageView
