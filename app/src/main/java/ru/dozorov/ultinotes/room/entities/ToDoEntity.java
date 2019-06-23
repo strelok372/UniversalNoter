@@ -2,15 +2,18 @@ package ru.dozorov.ultinotes.room.entities;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import java.io.Serializable;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
 @Entity(tableName = "to_do")
-public class ToDoEntity implements NoteEntity{
+public class ToDoEntity implements NoteEntity, Serializable {
     @PrimaryKey(autoGenerate = true)
-    public int position;
+    public transient int position;
     public String text;
     public int actual;
 

@@ -1,11 +1,11 @@
 package ru.dozorov.ultinotes.fragments;
 
+import android.Manifest;
 import android.content.Intent;
-import android.content.res.ColorStateList;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -27,17 +28,28 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
+import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
 
 import ru.dozorov.ultinotes.R;
+import ru.dozorov.ultinotes.serialization.NotesBackup;
+import ru.dozorov.ultinotes.viewmodel.NoteViewModel;
 
 public class LoginFragment extends Fragment implements View.OnClickListener {
+    public static final int BACKUP_CODE = 201;
+    public static final int RESTORE_CODE = 202;
     Button signInButton;
     Button backupButton;
     ImageView userIcon;
@@ -89,7 +101,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    void updateUi(){
+    void updateUi() {
         backupButton.setClickable(true);
 
         Drawable d = backupButton.getBackground();
@@ -102,13 +114,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         userLogin.setText(account.getDisplayName());
 
         Mode = 2;
-        if (account.getPhotoUrl() != null){
+        if (account.getPhotoUrl() != null) {
             d = null;
             try {
                 d = new AsyncTask<Void, Void, Drawable>() {
                     @Override
                     protected Drawable doInBackground(Void[] objects) {
-                        String url =  account.getPhotoUrl().toString();
+                        String url = account.getPhotoUrl().toString();
                         InputStream is = null;
                         try {
                             is = (InputStream) new URL(url).getContent();
@@ -126,17 +138,63 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             userIcon.setImageDrawable(d);
         }
     }
+
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    void exportDB(String path) {
+        try {
+            NotesBackup nb = new NotesBackup();
+            nb.fillObject(ViewModelProviders.of(getActivity()).get(NoteViewModel.class));
+            File exported = new File(path + "/" + "UltiNotes(" + LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE) + ").bckp");
+            if (exported.createNewFile()) {
+                FileOutputStream fos = new FileOutputStream(exported);
+                new ObjectOutputStream(fos).writeObject(nb);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void importDB(String filePath) {
+        if (filePath.endsWith(".bckp")) {
+            File db = new File(filePath);
+            try {
+                FileInputStream fis = new FileInputStream(db);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                NotesBackup nb;
+                nb = (NotesBackup) ois.readObject();
+                nb.fillDB(ViewModelProviders.of(getActivity()).get(NoteViewModel.class));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Toast.makeText(getActivity(), "Please, choose the correct file", Toast.LENGTH_LONG).show();
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
+        switch (requestCode) {
+            case RC_SIGN_IN:
+                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                handleSignInResult(task);
+                break;
+            case RESTORE_CODE:
+                importDB(data.getStringExtra(FileManagerFragment.RETURN_DATA));
+                break;
+            case BACKUP_CODE:
+                exportDB(data.getStringExtra(FileManagerFragment.RETURN_DATA));
+                break;
         }
     }
 
@@ -148,24 +206,25 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 //            Toast.makeText(getContext(),"Auth success for " + account.getEmail(), Toast.LENGTH_SHORT).show();
         } catch (ApiException e) {
             Log.w("MY_LOG_HERE: ", "signInResult:failed code=" + e.getStatusCode());
-            Toast.makeText(getContext(),"Auth failed with code " + e.getStatusCode(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Auth failed with code " + e.getStatusCode(), Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
 
             case R.id.b_restore_from_file:
-
+                if (checkFilePermission())
+                    openFileExplorer(RESTORE_CODE);
                 break;
 
             case R.id.b_backup_to_file:
-
+                if (checkFilePermission())
+                    openFileExplorer(RESTORE_CODE);
                 break;
-
             case R.id.b_signin_signout:
-                switch (Mode){
+                switch (Mode) {
                     case 1:
                         signIn();
                         break;
@@ -186,8 +245,41 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 break;
         }
     }
-    public interface OnLoginFragmentListener{
+
+    boolean checkFilePermission() {
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    openFileExplorer();
+                }
+                Toast.makeText(getContext(), "File storage permission denied", Toast.LENGTH_SHORT);
+        }
+    }
+
+    void openFileExplorer(int code) {
+        FileManagerFragment fmf = new FileManagerFragment();
+        fmf.setTargetFragment(this, code);
+        getChildFragmentManager()
+                .beginTransaction()
+                .replace(R.id.cv_login, fmf)
+//                .add(R.id.cv_login , new FileManagerFragment())
+                .addToBackStack(null)
+                .commit();
+    }
+
+    public interface OnLoginFragmentListener {
         public void getLoginInfo(GoogleSignInAccount account);
+
         public void doBackupNow();
     }
+
 }

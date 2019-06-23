@@ -73,9 +73,9 @@ public class RVToDoListAdapter extends RecyclerView.Adapter<RVToDoListAdapter.To
                         @Override
                         public void run() {
                             viewModel.delete(entityList.get(getAdapterPosition()));
-                            checkBox.setActivated(false);
                         }
                     }, 300);
+                    checkBox.setChecked(false);
                 }
             });
         }

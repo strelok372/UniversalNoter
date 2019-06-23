@@ -5,6 +5,9 @@ import org.threeten.bp.LocalTime;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import java.io.Serializable;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,9 +16,9 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @Entity(tableName = "date_notes")
-public class DateNoteEntity implements NoteEntity{
+public class DateNoteEntity implements NoteEntity, Serializable {
     @PrimaryKey(autoGenerate = true)
-    public Integer id;
+    public transient Integer id;
     public String description;
     public LocalTime time;
     public LocalDate date;

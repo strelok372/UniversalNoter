@@ -1,18 +1,32 @@
 package ru.dozorov.ultinotes;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.RecognizerIntent;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -30,6 +44,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.LocalTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
 import java.util.ArrayList;
@@ -45,6 +60,7 @@ import ru.dozorov.ultinotes.room.NoteDatabase;
 import ru.dozorov.ultinotes.room.entities.DateNoteEntity;
 import ru.dozorov.ultinotes.room.entities.SimpleNoteEntity;
 import ru.dozorov.ultinotes.room.entities.ToDoEntity;
+import ru.dozorov.ultinotes.transition.VerticalFlipTransition;
 import ru.dozorov.ultinotes.viewmodel.NoteViewModel;
 
 public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdapter.OnSimpleItemClickListener, LoginFragment.OnLoginFragmentListener, KeyboardInterface {
@@ -63,6 +79,8 @@ public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdap
     NoteDao noteDao;
     MenuItem backupButton;
     InputMethodManager imm;
+    String tempResult;
+
 
     @Override
     protected void onDestroy() {
@@ -70,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdap
         UltiNoteBackupAgent.requestBackup(this);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +99,18 @@ public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdap
         barLayout = findViewById(R.id.app_bar_layout);
         vPager = findViewById(R.id.viewpager);
         fab = findViewById(R.id.fab_main);
+
+
+        fab.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (checkFilePermission()){
+                    recognizeSpeech(vPager.getCurrentItem());
+                    return true;
+                }
+                return false;
+            }
+        });
         NestedScrollView bottomSheet = findViewById(R.id.nsv_main_activity);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -93,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdap
         setSupportActionBar(toolbar);
         pAdapter = new ViewPageAdapter(getSupportFragmentManager(), 1); //???
         vPager.setAdapter(pAdapter);
+        vPager.setPageTransformer(false, new VerticalFlipTransition());
         tabLayout.setupWithViewPager(vPager);
 
         vPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -192,6 +224,11 @@ public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdap
     }
 
     @Override
+    public boolean onKeyLongPress(int keyCode, KeyEvent event) {
+        return super.onKeyLongPress(keyCode, event);
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
         if (fab.isOrWillBeHidden())
@@ -284,6 +321,63 @@ public class MainActivity extends AppCompatActivity implements RVSimpleNotesAdap
                         imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
                 }
             }, 100);
+        }
+    }
+
+    void recognizeSpeech(int a) {
+        try {
+            Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
+            startActivityForResult(intent, a);
+        } catch (ActivityNotFoundException e) {
+            Intent browse = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.googlequicksearchbox"));
+            startActivity(browse);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == RESULT_OK) {
+            ArrayList<String> p = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            switch (requestCode){
+                case 0:
+                    noteViewModel.insert(new DateNoteEntity(p.get(0), null, LocalDate.now()));
+                    break;
+                case 1:
+                    AddNoteFragment anf = new AddNoteFragment();
+                    anf.createWithText(p.get(0));
+                    addNoteFragment(anf);
+                    break;
+                case 2:
+                    noteViewModel.insert(new ToDoEntity(p.get(0), 1));
+                    break;
+            }
+
+//            ArrayList<String> p = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+//            Log.i("WIOEIWJQEIOQWJIOE", String.valueOf(p.get(0)));
+//            tempResult = p.get(0);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    boolean checkFilePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 2);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 2:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Permission granted!", Toast.LENGTH_SHORT);
+//                    recognizeSpeech();
+                }
+                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT);
         }
     }
 }

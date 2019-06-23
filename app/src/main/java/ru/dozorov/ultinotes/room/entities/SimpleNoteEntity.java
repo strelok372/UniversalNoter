@@ -4,6 +4,9 @@ import org.threeten.bp.OffsetDateTime;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import java.io.Serializable;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,9 +15,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity(tableName = "notes")
-public class SimpleNoteEntity implements NoteEntity {
+public class SimpleNoteEntity implements NoteEntity, Serializable {
     @PrimaryKey(autoGenerate = true)
-    public Integer id;
+    public transient Integer id;
     public OffsetDateTime updated;
     public String title;
     public String text;
