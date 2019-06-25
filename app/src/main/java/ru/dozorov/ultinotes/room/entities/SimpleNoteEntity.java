@@ -32,5 +32,10 @@ public class SimpleNoteEntity implements NoteEntity, Serializable {
     public String className() {
         return "SimpleNoteEntity";
     }
+
+    @Override
+    public String getDescription() {
+        return text;
+    }
 //Color?
 }

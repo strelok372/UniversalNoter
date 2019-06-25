@@ -4,4 +4,5 @@ package ru.dozorov.ultinotes.room.entities;
 //@NoArgsConstructor
 public interface NoteEntity {
     public String className();
+    public String getDescription();
 }

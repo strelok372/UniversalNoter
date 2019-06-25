@@ -29,6 +29,11 @@ public class DateNoteEntity implements NoteEntity, Serializable {
         this.date = date;
     }
 
+    @Override
+    public String getDescription(){
+        return description;
+    }
+
 
     @Override
     public String className() {

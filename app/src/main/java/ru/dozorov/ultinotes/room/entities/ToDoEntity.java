@@ -27,4 +27,9 @@ public class ToDoEntity implements NoteEntity, Serializable {
     public String className() {
         return "ToDoEntity";
     }
+
+    @Override
+    public String getDescription() {
+        return text;
+    }
 }
