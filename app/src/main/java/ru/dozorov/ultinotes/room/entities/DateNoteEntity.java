@@ -3,6 +3,7 @@ package ru.dozorov.ultinotes.room.entities;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalTime;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -18,7 +19,9 @@ import lombok.Setter;
 @Entity(tableName = "date_notes")
 public class DateNoteEntity implements NoteEntity, Serializable {
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
     public transient Integer id;
+
     public String description;
     public LocalTime time;
     public LocalDate date;

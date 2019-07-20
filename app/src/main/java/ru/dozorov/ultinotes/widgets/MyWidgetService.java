@@ -21,11 +21,10 @@ import ru.dozorov.ultinotes.viewmodel.NoteViewModel;
 public class MyWidgetService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        return null;
+        return new MyRemoteViewsFactory(getApplicationContext(), intent);
     }
 
     class MyRemoteViewsFactory implements RemoteViewsFactory {
-        private int widgetId;
         private Context context;
         List<? extends NoteEntity> p;
         NoteDatabase database;
@@ -33,7 +32,6 @@ public class MyWidgetService extends RemoteViewsService {
 
         public MyRemoteViewsFactory(Context context, Intent intent) {
             this.context = context;
-            widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         }
 
         @Override
@@ -41,14 +39,29 @@ public class MyWidgetService extends RemoteViewsService {
             database = NoteDatabase.getInstance(context);
         }
 
+        void changeMode() {
+            if (mode < 2) mode++;
+            else mode = 0;
+            switch (mode) {
+                case 0:
+                    p = database.noteDao().getDateNotes().getValue();
+                    break;
+                case 1:
+                    p = database.noteDao().getUsualNotes().getValue();
+                    break;
+                case 2:
+                    p = database.noteDao().getActualToDo().getValue();
+                    break;
+            }
+        }
+
         @Override
         public void onDataSetChanged() {
-
+            changeMode();
         }
 
         @Override
         public void onDestroy() {
-
         }
 
         @Override
@@ -60,18 +73,7 @@ public class MyWidgetService extends RemoteViewsService {
 
         @Override
         public RemoteViews getViewAt(int position) {
-            if(p != null) {
-                switch (mode) {
-                    case 0:
-                        p = database.noteDao().getDateNotes().getValue();
-                        break;
-                    case 1:
-                        p = database.noteDao().getUsualNotes().getValue();
-                        break;
-                    case 2:
-                        p = database.noteDao().getActualToDo().getValue();
-                        break;
-                }
+            if (p != null) {
                 RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget_item);
                 rv.setTextViewText(R.id.tv_widget_item, p.get(position).getDescription());
                 return rv;
@@ -86,17 +88,17 @@ public class MyWidgetService extends RemoteViewsService {
 
         @Override
         public int getViewTypeCount() {
-            return 0;
+            return 1;
         }
 
         @Override
         public long getItemId(int position) {
-            return 0;
+            return position;
         }
 
         @Override
         public boolean hasStableIds() {
-            return false;
+            return true;
         }
     }
 }

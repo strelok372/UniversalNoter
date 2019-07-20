@@ -2,6 +2,7 @@ package ru.dozorov.ultinotes.room.entities;
 
 import org.threeten.bp.OffsetDateTime;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -17,6 +18,7 @@ import lombok.Setter;
 @Entity(tableName = "notes")
 public class SimpleNoteEntity implements NoteEntity, Serializable {
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
     public transient Integer id;
     public OffsetDateTime updated;
     public String title;

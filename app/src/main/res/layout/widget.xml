@@ -1,64 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_empty_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="There are nothing yet..."
-        android:textStyle="italic" />
-
     <ListView
         android:id="@+id/lv_widget"
-        style="@style/Widget.AppCompat.ListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@drawable/tl_tr_bl_whitecorner">
+        android:layout_height="match_parent"
+        android:background="@drawable/tl_tr_bl_whitecorner"
+        android:padding="8dp"
+        tools:listitem="@layout/widget_item">
 
     </ListView>
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/tv_widget_empty_view"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/tl_tr_bl_whitecorner"
+        android:gravity="center"
+        android:text="There are no records yet."
+        android:textColor="@color/deepBlue"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="end"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="8dp"
+        android:background="@drawable/bl_br_corner"
         android:orientation="horizontal"
-        android:visibility="visible">
+        android:padding="4dp">
 
         <ImageView
-            android:id="@+id/iv_space_widget"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/cutout_fg"
-            android:tintMode="multiply"
-            android:visibility="invisible" />
-
-        <LinearLayout
+            android:id="@+id/b_change_widget"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/bl_br_corner"
-            android:orientation="horizontal"
-            android:padding="8dp">
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_change_widget" />
 
-            <ImageView
-                android:id="@+id/b_change_widget"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_change_widget" />
-
-            <ImageView
-                android:id="@+id/b_add_to_widget"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_add_widget" />
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/b_add_to_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_add_widget" />
 
     </LinearLayout>
 
 
-</LinearLayout>
+</FrameLayout>
